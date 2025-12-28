@@ -15,7 +15,7 @@ func CallEngine(inPtr unsafe.Pointer, inLen C.uint64_t, outPtr **C.uchar, outLen
 	}
 
 	buf := C.GoBytes(inPtr, C.int(inLen))
-	resp, err := dispatch(buf)
+	resp, err := dispatchFunction(buf)
 	if err != nil || len(resp) == 0 {
 		return 1
 	}
