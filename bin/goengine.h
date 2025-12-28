@@ -89,6 +89,7 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
+extern int CallEngine(void* inPtr, uint64_t inLen, unsigned char** outPtr, uint64_t* outLen);
 extern void FreeBuffer(void* ptr);
 
 #ifdef __cplusplus

@@ -6,8 +6,12 @@ package main
 #include <stdint.h>
 */
 import "C"
-import "unsafe"
+import (
+	"log"
+	"unsafe"
+)
 
+//export CallEngine
 func CallEngine(inPtr unsafe.Pointer, inLen C.uint64_t, outPtr **C.uchar, outLen *C.uint64_t) C.int {
 
 	if inPtr == nil || inLen == 0 {
@@ -17,11 +21,13 @@ func CallEngine(inPtr unsafe.Pointer, inLen C.uint64_t, outPtr **C.uchar, outLen
 	buf := C.GoBytes(inPtr, C.int(inLen))
 	resp, err := dispatchFunction(buf)
 	if err != nil || len(resp) == 0 {
+		log.Printf("CallEngine: dispatchFunction error: %v", err)
 		return 1
 	}
 
 	cbuf := C.malloc(C.size_t(len(resp)))
 	if cbuf == nil {
+		log.Printf("CallEngine: C.malloc failed")
 		return 1
 	}
 	C.memcpy(cbuf, unsafe.Pointer(&resp[0]), C.size_t(len(resp)))
