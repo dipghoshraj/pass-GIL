@@ -1,21 +1,15 @@
 namespace simple;
 
-table HashJob {
-  id: ulong;
-  data: [ubyte];
-}
-
 table HashRequest {
-  jobs: [HashJob];
-}
-
-table HashResult {
-  id: ulong;
-  digest: [ubyte];  // SHA-256 digest
+    data: [string];
+    count: uint32;
 }
 
 table HashResponse {
-  results: [HashResult];
+    user_data: string;
+    hash_data: string;
 }
 
-root_type HashRequest;
+table HashOutPut {
+    result: [HashResponse];
+}

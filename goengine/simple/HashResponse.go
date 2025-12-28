@@ -41,34 +41,30 @@ func (rcv *HashResponse) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *HashResponse) Results(obj *HashResult, j int) bool {
+func (rcv *HashResponse) UserData() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *HashResponse) ResultsLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
+func (rcv *HashResponse) HashData() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.VectorLen(o)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0
+	return nil
 }
 
 func HashResponseStart(builder *flatbuffers.Builder) {
-	builder.StartObject(1)
+	builder.StartObject(2)
 }
-func HashResponseAddResults(builder *flatbuffers.Builder, results flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(results), 0)
+func HashResponseAddUserData(builder *flatbuffers.Builder, userData flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(userData), 0)
 }
-func HashResponseStartResultsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+func HashResponseAddHashData(builder *flatbuffers.Builder, hashData flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(hashData), 0)
 }
 func HashResponseEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

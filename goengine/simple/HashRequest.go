@@ -41,19 +41,16 @@ func (rcv *HashRequest) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *HashRequest) Jobs(obj *HashJob, j int) bool {
+func (rcv *HashRequest) Data(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		x := rcv._tab.Vector(o)
-		x += flatbuffers.UOffsetT(j) * 4
-		x = rcv._tab.Indirect(x)
-		obj.Init(rcv._tab.Bytes, x)
-		return true
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
 	}
-	return false
+	return nil
 }
 
-func (rcv *HashRequest) JobsLength() int {
+func (rcv *HashRequest) DataLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
@@ -61,14 +58,29 @@ func (rcv *HashRequest) JobsLength() int {
 	return 0
 }
 
+func (rcv *HashRequest) Count() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *HashRequest) MutateCount(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(6, n)
+}
+
 func HashRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(1)
+	builder.StartObject(2)
 }
-func HashRequestAddJobs(builder *flatbuffers.Builder, jobs flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(jobs), 0)
+func HashRequestAddData(builder *flatbuffers.Builder, data flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(data), 0)
 }
-func HashRequestStartJobsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+func HashRequestStartDataVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func HashRequestAddCount(builder *flatbuffers.Builder, count uint32) {
+	builder.PrependUint32Slot(1, count, 0)
 }
 func HashRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
