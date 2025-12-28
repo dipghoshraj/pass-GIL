@@ -1,0 +1,16 @@
+namespace engine;
+
+table Request {
+  func_id: uint;
+  request_id: ulong;
+  payload: [ubyte]; // nested payload (e.g., hash jobs)
+}
+
+table Response {
+  request_id: ulong;
+  status: int;        // 0=success, nonzero=failure
+  payload: [ubyte];   // nested response
+  error: string;      // optional error message
+}
+
+root_type Request;
