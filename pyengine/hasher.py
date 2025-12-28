@@ -80,4 +80,4 @@ out = Out.HashOutPut.GetRootAsHashOutPut(out_buf, 0)
 
 for i in range(out.ResultLength()):
     o= out.Result(i)
-    print(o.HashData().decode('utf-8'))
+    print(o.HashData().hex(), o.UserData().decode('utf-8'))
